@@ -1,6 +1,89 @@
-import {getStore} from '@netlify/blobs';
-export const store=()=>getStore('rema-moderation');
-export async function submissions(){const token=process.env.NETLIFY_API_TOKEN,id=process.env.NETLIFY_FORM_ID;if(!token||!id)throw Error('Netlify Forms API is not configured');let all=[];for(let page=1;page<=10;page++){const res=await fetch(`https://api.netlify.com/api/v1/forms/${encodeURIComponent(id)}/submissions?per_page=100&page=${page}`,{headers:{Authorization:`Bearer ${token}`}});if(!res.ok)throw Error(`Netlify Forms API returned ${res.status}`);const batch=await res.json();all.push(...batch);if(batch.length<100)break;}return all;}
-const arr=v=>{try{const x=JSON.parse(v||'[]');return Array.isArray(x)?x:[]}catch{return []}};
-export function normalize(s){const d=s.data||{};let file=d.pdf;let pdf_url=typeof file==='string'&&/^https:\/\//.test(file)?file:null;if(file&&typeof file==='object')pdf_url=file.url||file.link||null;return {id:String(s.id),created_at:s.created_at||new Date().toISOString(),name:d.name||'Untitled',authors:d.authors||'',author_entries:arr(d.author_entries),description:d.description||'',constructs:arr(d.constructs),specific_constructs:arr(d.specific_constructs),types:arr(d.types),populations:arr(d.populations),purposes:arr(d.purposes),evidence:d.evidence||'',resource_url:/^https?:\/\//.test(d.resource_url||'')?d.resource_url:null,reference:d.reference||'',access:d.access||'Unknown',notes:d.notes||'',contributor:d.contributor||'',pdf_url,status:'published'}}
-export async function moderation(){return JSON.parse(await store().get('states')||'{}')}
+
+import { getStore } from '@netlify/blobs';
+
+export const store = () => getStore({
+  name: 'rema-moderation',
+  consistency: 'strong'
+});
+
+export async function submissions() {
+  const token = process.env.NETLIFY_API_TOKEN;
+  const id = process.env.NETLIFY_FORM_ID;
+
+  if (!token || !id) {
+    throw Error('Netlify Forms API is not configured');
+  }
+
+  let all = [];
+
+  for (let page = 1; page <= 10; page++) {
+    const res = await fetch(
+      `https://api.netlify.com/api/v1/forms/${encodeURIComponent(id)}/submissions?per_page=100&page=${page}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    if (!res.ok) {
+      throw Error(`Netlify Forms API returned ${res.status}`);
+    }
+
+    const batch = await res.json();
+    all.push(...batch);
+
+    if (batch.length < 100) break;
+  }
+
+  return all;
+}
+
+const arr = v => {
+  try {
+    const x = JSON.parse(v || '[]');
+    return Array.isArray(x) ? x : [];
+  } catch {
+    return [];
+  }
+};
+
+export function normalize(s) {
+  const d = s.data || {};
+  let file = d.pdf;
+
+  let pdf_url =
+    typeof file === 'string' && /^https:\/\//.test(file)
+      ? file
+      : null;
+
+  if (file && typeof file === 'object') {
+    pdf_url = file.url || file.link || null;
+  }
+
+  return {
+    id: String(s.id),
+    created_at: s.created_at || new Date().toISOString(),
+    name: d.name || 'Untitled',
+    authors: d.authors || '',
+    author_entries: arr(d.author_entries),
+    description: d.description || '',
+    constructs: arr(d.constructs),
+    specific_constructs: arr(d.specific_constructs),
+    types: arr(d.types),
+    populations: arr(d.populations),
+    purposes: arr(d.purposes),
+    evidence: d.evidence || '',
+    resource_url: /^https?:\/\//.test(d.resource_url || '')
+      ? d.resource_url
+      : null,
+    reference: d.reference || '',
+    access: d.access || 'Unknown',
+    notes: d.notes || '',
+    contributor: d.contributor || '',
+    pdf_url,
+    status: 'published'
+  };
+}
+
+export async function moderation() {
+  return JSON.parse(
+    (await store().get('states')) || '{}'
+  );
+}
