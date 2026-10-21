@@ -7,3 +7,13 @@
 .specific-selector{display:grid;gap:14px}.specific-options{border:1px solid #d8e2d9;border-radius:12px;max-height:320px;overflow-y:auto;padding:16px;display:grid;gap:16px}.specific-group-title{display:block;margin-bottom:10px;color:#3b6d60;font-size:.9rem}.specific-options .checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.selected-constructs{display:flex;flex-wrap:wrap;gap:8px}.selected-constructs button{cursor:pointer;border:0}.other-construct{display:flex;gap:10px;align-items:center}.other-construct input{flex:1;min-width:0}.filterrow{flex-wrap:wrap}.filterrow select{flex:1 1 190px;min-width:0}@media(max-width:640px){.specific-options .checks{grid-template-columns:1fr}.other-construct{flex-wrap:wrap}}
 
 .community{margin-top:24px}.community h3{display:flex;align-items:center;gap:8px;margin:28px 0 14px}.helpful{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #bcd1c3;border-radius:8px;background:#edf4ee;color:#315f53;font-weight:700;margin-right:12px}.community-comment{border-top:1px solid #e8eee8;padding:16px 0}.community-comment small{margin-left:12px;color:#839287}.community-comment p{margin:8px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}.community-form{display:grid;gap:15px;margin:20px 0}.community-form label{display:grid;gap:8px;font-weight:700;font-size:13px}.community-form input,.community-form textarea{width:100%;font-weight:400}.community-form .btn{justify-self:start}.honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
+/* Spacing for the resource-type selector */
+.form {
+  padding-top: 32px;
+}
+
+@media (max-width: 720px) {
+  .form {
+    padding-top: 24px;
+  }
+}
